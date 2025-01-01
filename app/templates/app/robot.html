@@ -17,114 +17,132 @@
         {% widthratio 98 len_word_to_guess 1 as percentage %}
         {% with ''|center:len_word_to_guess as range %}
         {% for i in '01'|make_list %}
-        <div class="game">
-            {% for j in '012345'|make_list %}
-            <div class="word" data-word="">
-                {% for k in range %}
-                <div class="letter" data-width="{{percentage}}%">
-                    <p></p>
+        <div class="game_container">
+            <h3 class="player">
+                {% if i == '1' %}
+                {{'Robot'}}
+                {% else %}
+                {{'Vous'}}
+                {% endif %}
+            </h3>
+            <div class="game">
+                {% for j in '012345'|make_list %}
+                <div class="word" data-word="">
+                    {% for k in range %}
+                    <div class="letter" data-width="{{percentage}}%">
+                        <p></p>
+                    </div>
+                    {% endfor %}
                 </div>
                 {% endfor %}
             </div>
-            {% endfor %}
         </div>
         {% endfor %}
         {% endwith %}
     </div>
 
     <script>
-        function verifyLetter(letter, index, word_to_guess) {
-            if (letter.textContent.trim() != "." && letter.textContent.trim() != "") {
-                if (letter.textContent.trim() === word_to_guess[index]) {
-                    letter.style.backgroundColor = 'green';
-                } else if (word_to_guess.includes(letter.textContent.trim())) {
-                    letter.style.backgroundColor = 'orange';
-                } else {
-                    letter.style.backgroundColor = 'red';
+        (async function () {
+            function verifyLetter(letter, index, word_to_guess) {
+                if (letter.textContent.trim() != "." && letter.textContent.trim() != "") {
+                    if (letter.textContent.trim() === word_to_guess[index]) {
+                        letter.style.backgroundColor = '#018E42';
+                    } else if (word_to_guess.includes(letter.textContent.trim())) {
+                        letter.style.backgroundColor = '#F07A05';
+                    } else {
+                        letter.style.backgroundColor = '#BF1A2F';
+                    }
                 }
             }
-        }
 
-        function addRobotWord(guesses, words, current_word, len_word) {
-            const letters = words[current_word + 6].querySelectorAll('.letter');
-            let word = words[current_word + 6].getAttribute('data-word');
-            guesses[current_word] = guesses[current_word].trim();
-            for (let i = 0; i < len_word; i++) {
-                letters[i].textContent = guesses[current_word][i];
-                word += guesses[current_word][i];
+            function addRobotWord(guesses, words, current_word, len_word) {
+                const letters = words[current_word + 6].querySelectorAll('.letter');
+                let word = words[current_word + 6].getAttribute('data-word');
+                guesses[current_word] = guesses[current_word].trim();
+                for (let i = 0; i < len_word; i++) {
+                    letters[i].textContent = guesses[current_word][i];
+                    word += guesses[current_word][i];
+                }
             }
-        }
 
-        function displayDots(current_word, len_word) {
-            const letters = words[current_word].querySelectorAll('.letter');
-            for (let i = 0; i < len_word; i++) {
-                letters[i].textContent = ".";
+            async function displayDots(current_word, len_word) {
+                const letters = words[current_word].querySelectorAll('.letter');
+                for (let i = 0; i < len_word; i++) {
+                    letters[i].textContent = ".";
+                }
             }
-        }
 
-        function handleKeydown(event) {
+            function handleKeydown(event) {
+                const letters = words[current_word].querySelectorAll('.letter');
+                let word = words[current_word].getAttribute('data-word');
+                if (!end) {
+                    if (event.key === "Enter") {
+                        if (current_letter == word_data.len_word_to_guess) {
+                            letters.forEach((letter, index) => {
+                                verifyLetter(letter, index, word_data.word_to_guess);
+                            });
+                            if (current_word < word_data.all_guesses.length - 1) {
+                                addRobotWord(word_data.all_guesses, words, current_word, word_data.len_word_to_guess);
+                            }
+                            if (word === word_data.word_to_guess) {
+                                end = true;
+                                document.removeEventListener("keydown", handleKeydown, true);
+                                if (current_word < word_data.all_guesses.length) {
+                                    for (let i = 1; i < word_data.all_guesses.length - current_word; i++) {
+                                        addRobotWord(word_data.all_guesses, words, current_word + i, word_data.len_word_to_guess);
+                                    }
+                                }
+                            } else if (current_word == 5) {
+                                end = true;
+                                document.removeEventListener("keydown", handleKeydown, true);
+                                addRobotWord(word_data.all_guesses, words, word_data.all_guesses.length - 1, word_data.len_word_to_guess);
+                            } else {
+                                current_word += 1;
+                                current_letter = 0;
+                                displayDots(current_word, word_data.len_word_to_guess);
+                            }
+                        }
+                    } else if (event.key === "Backspace") {
+                        if (current_letter > 0) {
+                            current_letter--;
+                            word = word.slice(0, -1);
+                            letters[current_letter].textContent = '.';
+                        }
+                    } else {
+                        if (current_letter < word_data.len_word_to_guess && event.key.match(/[a-z]/i) && event.key.length === 1) {
+                            word += event.key;
+                            words[current_word].setAttribute('data-word', word);
+                            letters[current_letter].textContent = event.key;
+                            current_letter++;
+                        }
+                    }
+                }
+
+            }
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const letters = document.querySelectorAll('.letter');
+                letters.forEach(letter => {
+                    const width = letter.getAttribute('data-width');
+                    letter.style.width = width;
+                });
+                document.addEventListener("keydown", handleKeydown);
+            });
+
+            let current_word = 0;
+            let current_letter = 0;
+            let word_data;
+            const words = document.querySelectorAll('.word');
             const letters = words[current_word].querySelectorAll('.letter');
             let word = words[current_word].getAttribute('data-word');
-            if (!end) {
-                if (event.key === "Enter") {
-                    if (current_letter == len_word_to_guess) {
-                        letters.forEach((letter, index) => {
-                            verifyLetter(letter, index, word_to_guess);
-                        });
-                        if (current_word < all_guesses.length) {
-                            addRobotWord(all_guesses, words, current_word, len_word_to_guess);
-                        }
-                        if (word === word_to_guess) {
-                            end = true;
-                            document.removeEventListener("keydown", handleKeydown, true);
-                            if (current_word < all_guesses.length) {
-                                for (let i = 1; i < all_guesses.length - current_word; i++) {
-                                    addRobotWord(all_guesses, words, current_word + i, len_word_to_guess);
-                                }
-                            }
-                        } else {
-                            current_word += 1;
-                            current_letter = 0;
-                            displayDots(current_word, len_word_to_guess);
-                        }
-                    }
-                } else if (event.key === "Backspace") {
-                    if (current_letter > 0) {
-                        current_letter--;
-                        word = word.slice(0, -1);
-                        letters[current_letter].textContent = '.';
-                    }
-                } else {
-                    if (current_letter < len_word_to_guess && event.key.match(/[a-z]/i) && event.key.length === 1) {
-                        word += event.key;
-                        words[current_word].setAttribute('data-word', word);
-                        letters[current_letter].textContent = event.key;
-                        current_letter++;
-                    }
-                }
-            }
-
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const letters = document.querySelectorAll('.letter');
-            letters.forEach(letter => {
-                const width = letter.getAttribute('data-width');
-                letter.style.width = width;
-            });
-            document.addEventListener("keydown", handleKeydown);
-        });
-
-        let current_word = 0;
-        let current_letter = 0;
-        const len_word_to_guess = "{{ len_word_to_guess }}";
-        const word_to_guess = "{{ word_to_guess }}";
-        const all_guesses = "{{ all_guesses }}".replaceAll('&#x27;', "").replaceAll('[', "").replaceAll(']', "").split(',');
-        const words = document.querySelectorAll('.word');
-        const letters = words[current_word].querySelectorAll('.letter');
-        let word = words[current_word].getAttribute('data-word');
-        let end = false;
-        displayDots(current_word, len_word_to_guess);
+            let end = false;
+            await fetch("{% url 'get_data' %}")
+                .then(response => response.json())
+                .then(data => {
+                    word_data = data.data;
+                });
+            displayDots(current_word, word_data.len_word_to_guess);
+        })();
     </script>
 
 

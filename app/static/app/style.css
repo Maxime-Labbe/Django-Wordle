@@ -98,9 +98,25 @@ a {
     margin-top: 20px;
 }
 
-.game {
+.game_container {
     width: 30%;
     height: 70%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player {
+    width: fit-content;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 2rem;
+    color: var(--game-text-color);
+}
+
+.game {
+    width: 100%;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
     border: 2px solid var(--game-border-color);

@@ -148,6 +148,7 @@ def enough_available_letters(alphabet,alphabet_frequencies,word_len,banned_lette
     
 
 def play_game():
+    global word_to_guess
     random_len = random.randint(3, 8)
     words = filter_words(read_words(), random_len)
     words = [remove_accents(word) for word in words]
@@ -206,4 +207,9 @@ def play_game():
 
     print(guess,word_to_guess)
     data = {'len_word_to_guess': len(word_to_guess), 'word_to_guess': word_to_guess, 'all_guesses': all_guess}
+    return data
+
+data = play_game()
+
+def get_data():
     return data

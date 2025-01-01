@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from . import robot
 
 # Create your views here.
@@ -11,6 +11,9 @@ def solo(request):
     return render(request, 'app/solo.html')
 
 def robot_view(request):
-    data = robot.play_game()
-    print(data)
+    data = robot.get_data()
     return render(request, 'app/robot.html',context=data)
+
+def get_data(request):
+    data = robot.get_data()
+    return JsonResponse({'data': data})
