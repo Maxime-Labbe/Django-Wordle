@@ -136,7 +136,11 @@
             const letters = words[current_word].querySelectorAll('.letter');
             let word = words[current_word].getAttribute('data-word');
             let end = false;
-            await fetch("{% url 'get_data' %}")
+            await fetch("{% url 'get_data' %}", {
+                headers: {
+                    'X-SECRET-TOKEN': 'dzabvyu546456DJSQD6DAZ6TDQU6fa'
+                }
+            })
                 .then(response => response.json())
                 .then(data => {
                     word_data = data.data;

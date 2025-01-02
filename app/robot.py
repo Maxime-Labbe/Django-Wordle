@@ -1,6 +1,8 @@
 import random
 import unicodedata
 
+# data = {}
+
 def read_words():
     list = []
     with open('app/static/app/mots.dic', 'r', encoding='utf-16') as f:
@@ -148,7 +150,7 @@ def enough_available_letters(alphabet,alphabet_frequencies,word_len,banned_lette
     
 
 def play_game():
-    global word_to_guess
+    global data
     random_len = random.randint(3, 8)
     words = filter_words(read_words(), random_len)
     words = [remove_accents(word) for word in words]
@@ -205,11 +207,20 @@ def play_game():
             words.remove(guess)
         all_guess.append(guess)
 
-    print(guess,word_to_guess)
     data = {'len_word_to_guess': len(word_to_guess), 'word_to_guess': word_to_guess, 'all_guesses': all_guess}
     return data
 
-data = play_game()
+def set_data(data_to_assign):
+    global data
+    data = data_to_assign
 
 def get_data():
+    global data
     return data
+
+def get_word_to_guess():
+    random_len = random.randint(3, 8)
+    words = filter_words(read_words(), random_len)
+    words = [remove_accents(word) for word in words]
+    word_to_guess = random.choice(words)
+    return word_to_guess
