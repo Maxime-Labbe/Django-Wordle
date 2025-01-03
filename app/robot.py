@@ -1,19 +1,11 @@
 import random
-import unicodedata
-
-# data = {}
 
 def read_words():
     list = []
-    with open('app/static/app/mots.dic', 'r', encoding='utf-16') as f:
+    with open('app/static/app/mots.txt', 'r', encoding='utf-16') as f:
         for line in f:
-            line = line.strip().split(",")[0]
-            if line.count(" ") == 0 and line.isalpha():
-                list.append(line)
+            list.append(line.strip())
     return list
-
-def remove_accents(word):
-    return unicodedata.normalize('NFKD', word).encode('ASCII', 'ignore').decode('utf-8')
 
 def filter_words(words, length):
     return [word for word in words if len(word) == length]
@@ -153,7 +145,6 @@ def play_game():
     global data
     random_len = random.randint(3, 8)
     words = filter_words(read_words(), random_len)
-    words = [remove_accents(word) for word in words]
     word_to_guess = random.choice(words)
 
     letters = [""]*random_len
@@ -218,9 +209,12 @@ def get_data():
     global data
     return data
 
-def get_word_to_guess():
-    random_len = random.randint(3, 8)
+def set_word_to_guess():
+    global data
+    random_len = random.randint(4, 8)
     words = filter_words(read_words(), random_len)
-    words = [remove_accents(word) for word in words]
     word_to_guess = random.choice(words)
-    return word_to_guess
+    data = {'len_word_to_guess': len(word_to_guess), 'word_to_guess': word_to_guess}
+
+def get_word_to_guess():
+    return data

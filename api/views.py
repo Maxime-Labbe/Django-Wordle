@@ -23,4 +23,4 @@ def get_word_to_guess(request):
         return JsonResponse({'error': 'Unauthorized access'})
     
     word = robot.get_word_to_guess()
-    return JsonResponse({'word_to_guess': word})
+    return JsonResponse({'data': word})

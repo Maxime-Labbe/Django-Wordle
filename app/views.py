@@ -8,7 +8,9 @@ def index(request):
     return render(request, 'app/index.html')
 
 def solo(request):
-    return render(request, 'app/solo.html')
+    robot.set_word_to_guess()
+    data = robot.get_word_to_guess()
+    return render(request, 'app/solo.html',context=data)
 
 def robot_view(request):
     robot.set_data(robot.play_game())
