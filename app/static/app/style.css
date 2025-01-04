@@ -16,6 +16,9 @@
     --button-text-color: #000428;
     --game-border-color: #E5DADA;
     --game-text-color: #E5DADA;
+    --green-color: #018E42;
+    --red-color: #BF1A2F;
+    --orange-color: #F07A05;
 }
 
 html,
@@ -58,7 +61,7 @@ a {
     align-items: center;
 }
 
-.play_button {
+.play-button {
     width: 250px;
     height: 60px;
     background-color: var(--button-background-color);
@@ -79,7 +82,7 @@ a {
     animation: fadeInButton 5s;
 }
 
-.game_title {
+.game-title {
     width: fit-content;
     margin-left: auto;
     margin-right: auto;
@@ -89,7 +92,7 @@ a {
     text-shadow: -1px 1px 5px var(--title-color);
 }
 
-.one_game {
+.one-game {
     width: 100%;
     height: 100%;
     display: flex;
@@ -98,7 +101,7 @@ a {
     margin-top: 20px;
 }
 
-.two_games {
+.two-games {
     width: 100%;
     height: 100%;
     display: flex;
@@ -107,7 +110,7 @@ a {
     margin-top: 20px;
 }
 
-.game_container {
+.game-container {
     width: 33%;
     height: 75%;
     margin-left: auto;
@@ -162,6 +165,104 @@ a {
     font-size: 2rem;
     color: var(--game-text-color);
     line-height: 15.3%;
+}
+
+.pop-up-container {
+    visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+.pop-up {
+    width: 40%;
+    height: 50%;
+    background-color: var(--top-background-color);
+    border: 2px solid var(--game-border-color);
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pop-up>h2 {
+    color: var(--title-color);
+    font-size: 4rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.pop-up>p {
+    color: var(--game-text-color);
+    font-size: 1.7rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.pop-up-buttons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.pop-up-buttons button {
+    width: 170px;
+    height: 45px;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--game-text-color);
+    cursor: pointer;
+    margin-top: 20px;
+    opacity: 1;
+    text-align: center;
+    text-decoration: none;
+    line-height: 40px;
+    box-shadow: 0 0 10px 0 var(--button-text-color);
+}
+
+.play-again-button {
+    background-color: var(--green-color);
+}
+
+.return-button {
+    background-color: var(--red-color);
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    flex-direction: row;
+    animation: fadeInButton 5s;
+}
+
+.footer>h2 {
+    color: var(--title-color);
+    font-size: 1.8rem;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.footer>a>img {
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 @keyframes fadeInTitle {

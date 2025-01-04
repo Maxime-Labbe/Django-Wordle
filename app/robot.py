@@ -126,7 +126,7 @@ def update_alphabet(alphabet,alphabet_frequencies,words):
     for letter in alphabet:
         total_count = 0
         for word in words:
-            total_count += word.count(letter)
+            total_count += word.lower().count(letter)
         if total_count == 0:
             index = alphabet.index(letter)
             alphabet.remove(letter)
@@ -143,9 +143,9 @@ def enough_available_letters(alphabet,alphabet_frequencies,word_len,banned_lette
 
 def play_game():
     global data
-    random_len = random.randint(3, 8)
+    random_len = random.randint(4, 8)
     words = filter_words(read_words(), random_len)
-    word_to_guess = random.choice(words)
+    word_to_guess = random.choice(words).lower()
 
     letters = [""]*random_len
     not_placed = {}
