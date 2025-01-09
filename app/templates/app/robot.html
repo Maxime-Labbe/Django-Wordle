@@ -5,42 +5,55 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+    <link rel="stylesheet" href="{% static 'app/style/style.css' %}">
+    <link rel="stylesheet" href="{% static 'app/style/robot.css' %}">
     <title>Wordle</title>
 </head>
 
 <body>
-
     <h1 class="game-title">Wordle contre un robot</h1>
 
-    <div class="two-games">
-        {% widthratio 98 len_word_to_guess 1 as percentage %}
-        {% with ''|center:len_word_to_guess as range %}
-        {% for i in '01'|make_list %}
-        <div class="game-container">
-            <h3 class="player">
-                {% if i == '1' %}
-                {{'Robot'}}
-                {% else %}
-                {{'Vous'}}
-                {% endif %}
-            </h3>
-            <div class="game">
-                {% for j in '012345'|make_list %}
-                <div class="word" data-word="">
-                    {% for k in range %}
-                    <div class="letter" data-width="{{percentage}}%">
-                        <p></p>
+    <div class="container">
+        <div class="slide-left">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" width="40" height="40">
+                <path d="M10 6l6 6-6 6" stroke="#E5DADA" stroke-width="2" fill="none" fill-rule="evenodd"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="slide-right">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 39 39" width="40" height="40">
+                <path d="M14 6l-6 6 6 6" stroke="#E5DADA" stroke-width="2" fill="none" fill-rule="evenodd"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="two-games">
+            {% widthratio 98 len_word_to_guess 1 as percentage %}
+            {% with ''|center:len_word_to_guess as range %}
+            {% for i in '01'|make_list %}
+            <div class="game-container">
+                <h3 class="player">
+                    {% if i == '1' %}
+                    {{'Robot'}}
+                    {% else %}
+                    {{'Vous'}}
+                    {% endif %}
+                </h3>
+                <div class="game">
+                    {% for j in '012345'|make_list %}
+                    <div class="word" data-word="">
+                        {% for k in range %}
+                        <div class="letter" data-width="{{percentage}}%">
+                            <p></p>
+                        </div>
+                        {% endfor %}
                     </div>
                     {% endfor %}
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
+            {% endwith %}
         </div>
-        {% endfor %}
-        {% endwith %}
     </div>
-
     <div class="pop-up-container">
         <div class="pop-up">
             <h2>Bravo !</h2>
@@ -52,9 +65,32 @@
         </div>
     </div>
 
-    <script src="{% static 'app/script/robot.js' %}"></script>
 
+    <script src="{% static 'app/script.js' %}"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (document.body.clientWidth < 640) {
+                const slideLeft = document.querySelector('.slide-left');
+                const slideRight = document.querySelector('.slide-right');
+                const container = document.querySelector('.container');
+
+                slideLeft.addEventListener('click', function () {
+                    container.scrollBy({
+                        left: container.clientWidth,
+                        behavior: 'smooth'
+                    });
+                });
+
+                slideRight.addEventListener('click', function () {
+                    container.scrollBy({
+                        left: -container.clientWidth,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -2,6 +2,6 @@ from django.urls import path
 from api import views
 
 urlpatterns = [
-    path('get_data/', views.get_data, name='get_data'),
-    path('get_word_to_guess/', views.get_word_to_guess, name='get_word_to_guess'),
+    path('get_data_robot/', views.get_data_robot, name='get_data_robot'),
+    path('get_data_solo/', views.get_data_solo, name='get_data_solo'),
 ]

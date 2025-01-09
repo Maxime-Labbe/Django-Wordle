@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from app import robot
 
-def get_data(request):
+def get_data_robot(request):
     secret_token = request.headers.get('X-SECRET-TOKEN')
     if secret_token != settings.SECRET_API_TOKEN:
         return JsonResponse({'error': 'Unauthorized access'}, status=401)
@@ -17,7 +17,7 @@ def get_data(request):
         return JsonResponse({'error': 'Unexpected error occurred'})
     return JsonResponse({'data': data})
 
-def get_word_to_guess(request):
+def get_data_solo(request):
     referer = request.META.get('HTTP_REFERER')
     if not referer or not ('solo' in referer):
         return JsonResponse({'error': 'Unauthorized access'})

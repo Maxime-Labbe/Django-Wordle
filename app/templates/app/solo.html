@@ -5,24 +5,24 @@
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+    <link rel="stylesheet" href="{% static 'app/style/solo.css' %}">
+    <link rel="stylesheet" href="{% static 'app/style/style.css' %}">
     <title>Wordle</title>
 </head>
 
 <body>
-
     <h1 class="game-title">Wordle</h1>
 
     <div class="one-game">
         {% widthratio 98 len_word_to_guess 1 as percentage %}
         {% with ''|center:len_word_to_guess as range %}
-        <div class="game-container">
+        <div class="game-container container-solo">
             <h3 class="player">Vous</h3>
             <div class="game">
                 {% for j in '012345'|make_list %}
                 <div class="word" data-word="">
                     {% for k in range %}
-                    <div class="letter" data-width="{{percentage}}%">
+                    <div class="letter">
                         <p></p>
                     </div>
                     {% endfor %}
@@ -32,7 +32,6 @@
         </div>
         {% endwith %}
     </div>
-
     <div class="pop-up-container">
         <div class="pop-up">
             <h2>Bravo !</h2>
@@ -44,7 +43,7 @@
         </div>
     </div>
 
-    <script src="{% static 'app/script/solo.js' %}"></script>
+    <script src="{% static 'app/script.js' %}"></script>
 
 </body>
 

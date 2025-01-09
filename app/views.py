@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from . import robot
-import requests
 
 def index(request):
     return render(request, 'app/index.html')

@@ -1,0 +1,77 @@
+@font-face {
+    font-family: cocogoose;
+    src: url(../fonts/Cocogoose-Pro-Light-trial.ttf),
+        url(../fonts/Cocogoose-Pro-Light-Italic-trial.ttf),
+        url(../fonts/Cocogoose-Pro-Regular-trial.ttf),
+        url(../fonts/Cocogoose-Pro-Italic-trial.ttf),
+        url(../fonts/Cocogoose-Pro-Bold-trial.ttf),
+        url(../fonts/Cocogoose-Pro-Bold-Italic-trial.ttf);
+}
+
+:root {
+    --top-background-color: #004e92;
+    --bot-background-color: #000428;
+    --title-color: #E5DADA;
+    --button-background-color: #E5DADA;
+    --button-text-color: #000428;
+    --game-border-color: #E5DADA;
+    --game-text-color: #E5DADA;
+    --green-color: #018E42;
+    --red-color: #BF1A2F;
+    --orange-color: #F07A05;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+.slide-left {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    visibility: visible;
+}
+
+.slide-right {
+    position: absolute;
+    right: -13%;
+    top: 50%;
+    visibility: visible;
+}
+
+.two-games {
+    width: 200%;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+@media (min-width: 640px) {
+    .slide-left {
+        visibility: hidden;
+    }
+
+    .slide-right {
+        visibility: hidden;
+    }
+
+    .two-games {
+        width: 100%;
+        margin-top: 20px;
+    }
+}

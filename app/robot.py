@@ -65,7 +65,8 @@ def calculate_letter_frequencies(words,alphabet,word_len):
     for letter in range(len(alphabet)):
         for word in words:
             alphabet_frequencies[letter] += word.count(alphabet[letter])
-        alphabet_frequencies[letter] = round((alphabet_frequencies[letter]/letter_count)*100,2)
+        if letter_count:
+            alphabet_frequencies[letter] = round((alphabet_frequencies[letter]/letter_count)*100,2)
     return alphabet_frequencies
 
 def search_word_most_frequent_letters(words,alphabet_frequencies,alphabet):
@@ -158,7 +159,7 @@ def play_game():
     guess = ''
     all_guess = []
 
-    while guess != word_to_guess:
+    while guess != word_to_guess and len(all_guess) < 6:
         result = ['0']*random_len
         if guess:
             for i in range(random_len):
