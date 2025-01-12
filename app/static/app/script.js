@@ -14,15 +14,39 @@ async function script() {
         }
     }
 
+    function addKeyboardEventListener() {
+        const keyboard = document.querySelector('.keyboard');
+        const keys = document.querySelectorAll('.key');
+        keys.forEach(key => {
+            key.addEventListener('click', (event) => {
+                handleKeydown(event.target.id);
+            }
+            );
+        });
+        keyboard.addEventListener('click', (event) => {
+            event.preventDefault();
+        })
+    }
+
     function verifyLetter(letter, index, word_to_guess, correct_letters) {
-        if (letter.textContent.trim() != "." && letter.textContent.trim() != "") {
-            if (letter.textContent.trim() === word_to_guess[index]) {
-                correct_letters[index] = letter.textContent.trim();
-                letter.className += ' correct';
-            } else if (word_to_guess.includes(letter.textContent.trim())) {
-                letter.className += ' misplaced';
+        const text = letter.textContent.trim().toLowerCase();
+        const keys = document.querySelectorAll('.key');
+        const key_index = (Object.keys(keys).filter(key => text === keys[key].id));
+        if (text !== "." && text !== "") {
+            if (text === word_to_guess[index]) {
+                correct_letters[index] = text;
+                letter.className += ' correct-letter';
+                if (!keys[key_index].className.includes('correct-key')) {
+                    keys[key_index].className = 'key correct-key';
+                }
+            } else if (word_to_guess.includes(text)) {
+                letter.className += ' misplaced-letter';
+                if (!keys[key_index].className.includes('misplaced-key') && !keys[key_index].className.includes('correct-key')) {
+                    keys[key_index].className = 'key misplaced-key';
+                }
             } else {
-                letter.className += ' wrong';
+                letter.className += ' wrong-letter';
+                keys[key_index].className += ' wrong-key';
             }
         }
         return correct_letters;
@@ -33,7 +57,7 @@ async function script() {
         let word = words[current_word + 6].getAttribute('data-word');
         guesses[current_word] = guesses[current_word].trim();
         for (let i = 0; i < len_word; i++) {
-            letters[i].textContent = guesses[current_word][i];
+            letters[i].textContent = guesses[current_word][i].toUpperCase();
             word += guesses[current_word][i];
         }
     }
@@ -59,15 +83,28 @@ async function script() {
             } else {
                 letters[i].className = 'letter placeholder';
             }
-            letters[i].textContent = correct_letters[i];
+            letters[i].textContent = correct_letters[i].toUpperCase();
         }
     }
+
+    function simulateKeydown(event) {
+        const keys = document.querySelectorAll('.key');
+        keys.forEach(key => {
+            if (key.id === event) {
+                key.className += ' key-pressed';
+                setTimeout(() => {
+                    key.className = key.className.replace(' key-pressed', '');
+                }, 175);
+            }
+        });
+    };
 
     function handleKeydown(event) {
         const letters = words[current_word].querySelectorAll('.letter');
         let word = words[current_word].getAttribute('data-word');
+        simulateKeydown(event);
         if (!end) {
-            if (event.key === "Enter") {
+            if (event === "Enter") {
                 if (current_letter == word_data.len_word_to_guess) {
                     addAnimationLetters(letters);
                     letters.forEach((letter, index) => {
@@ -102,28 +139,29 @@ async function script() {
                         displayPlaceholder(current_word, word_data.len_word_to_guess, correct_letters);
                     }
                 }
-            } else if (event.key === "Backspace") {
+            } else if (event === "Backspace") {
                 if (current_letter > 0) {
                     if (letters[current_letter]) letters[current_letter].className = 'letter placeholder';
                     current_letter--;
                     word = word.slice(0, -1);
+                    words[current_word].setAttribute('data-word', word);
                     letters[current_letter].className = 'letter placeholder current-letter';
-                    letters[current_letter].textContent = correct_letters[current_letter];
+                    letters[current_letter].textContent = correct_letters[current_letter].toUpperCase();
                 }
             } else {
-                if (current_letter < word_data.len_word_to_guess && event.key.match(/[a-z]/i) && event.key.length === 1) {
-                    word += event.key.toLowerCase();
+                if (current_letter < word_data.len_word_to_guess && event.match(/[a-z]/i) && event.length === 1) {
+                    word += event.toLowerCase();
                     words[current_word].setAttribute('data-word', word);
                     letters[current_letter].className = 'letter';
-                    letters[current_letter].textContent = event.key.toLowerCase();
+                    letters[current_letter].textContent = event.toUpperCase();
                     current_letter++;
-                    if (letters[current_letter]) letters[current_letter].className = 'letter current-letter';
+                    if (letters[current_letter]) letters[current_letter].className += ' current-letter';
                 }
             }
         }
-
     }
 
+    addKeyboardEventListener();
     const letter_animation_duration = 0.5;
     const letter_animation_delay = 0.3;
     const type_of_game = document.querySelectorAll('.game').length > 1 ? 'robot' : 'solo';
@@ -136,7 +174,7 @@ async function script() {
     let correct_letters = (new Array(word_data.len_word_to_guess)).fill('.');
     let end = false;
     displayPlaceholder(current_word, word_data.len_word_to_guess, correct_letters);
-    document.addEventListener("keydown", handleKeydown);
+    document.addEventListener("keydown", (event) => handleKeydown(event.key));
 };
 
 script();

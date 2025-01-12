@@ -9,7 +9,9 @@ def read_words():
         for line in f:
             line = line.strip().split(",")[0]
             if line.count(" ") == 0 and line.isalpha() and len(line) > 3 and len(line) < 9:
-                list.append(remove_accents(line))
+                line = remove_accents(line)
+                if line not in list:
+                    list.append(line)
     return list
 
 def write_words():

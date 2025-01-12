@@ -90,8 +90,8 @@ a {
 }
 
 .letter {
-    width: 25px;
-    height: 25px;
+    width: 28px;
+    height: 28px;
     margin-top: -2px;
     border: 2px solid var(--game-border-color);
     border-radius: 7px;
@@ -113,16 +113,94 @@ a {
     color: var(--not-validated-letter-color);
 }
 
-.correct {
+.correct-letter {
     background-color: var(--green-color);
 }
 
-.misplaced {
+.misplaced-letter {
     background-color: var(--orange-color);
 }
 
-.wrong {
+.wrong-letter {
     background-color: var(--red-color);
+}
+
+.keyboard {
+    width: 100%;
+    position: absolute;
+    bottom: 12%;
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: center;
+    visibility: visible;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 10px;
+    margin-top: 40px;
+}
+
+.first-line-keys,
+.second-line-keys,
+.third-line-keys {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 5px;
+}
+
+.key {
+    position: relative;
+    width: 36px;
+    height: 50px;
+    padding: 0;
+    border: 0;
+    top: 0;
+    right: 0;
+    border-radius: 0.5rem;
+    font-size: 1.2rem;
+    color: var(--button-text-color);
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    text-align: center;
+    box-shadow: -1px 5px 0px rgba(229, 218, 218, 0.6);
+    letter-spacing: 1px;
+}
+
+.key#Backspace {
+    width: 45px;
+}
+
+.key#Enter {
+    width: 45px;
+}
+
+.key-pressed {
+    box-shadow: none;
+    cursor: pointer;
+    right: 1px;
+    top: 5px;
+}
+
+.correct-key {
+    background-color: var(--green-color);
+    box-shadow: -1px 5px 0px rgba(1, 142, 66, 0.6);
+    color: var(--validated-letter-color);
+}
+
+.misplaced-key {
+    background-color: var(--orange-color);
+    box-shadow: -1px 5px 0px rgba(240, 122, 5, 0.6);
+    color: var(--validated-letter-color);
+}
+
+.wrong-key {
+    background-color: rgba(229, 218, 218, 0.8);
+}
+
+.key>img {
+    padding-top: 2px;
 }
 
 .pop-up-container {
@@ -134,15 +212,16 @@ a {
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1;
     transition: all 0.5s ease-in-out;
 }
 
 .pop-up {
-    width: 40%;
+    width: 70%;
     height: 50%;
+    margin-top: 150px;
     background-color: var(--top-background-color);
     border: 2px solid var(--game-border-color);
     border-radius: 15px;
@@ -154,14 +233,14 @@ a {
 
 .pop-up>h2 {
     color: var(--title-color);
-    font-size: 4rem;
+    font-size: 2rem;
     margin-top: 10px;
     margin-bottom: 10px;
 }
 
 .pop-up>p {
     color: var(--game-text-color);
-    font-size: 1.7rem;
+    font-size: 1.2rem;
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -169,18 +248,18 @@ a {
 .pop-up-buttons {
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 50px;
+    gap: 15px;
 }
 
 .pop-up-buttons button {
-    width: 170px;
-    height: 45px;
+    width: 140px;
+    height: 40px;
     border: none;
     border-radius: 20px;
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     font-weight: bold;
     color: var(--game-text-color);
     cursor: pointer;
@@ -209,10 +288,15 @@ a {
 @media (min-width: 640px) {
     .game-title {
         font-size: 2rem;
+        margin-bottom: 0;
     }
 
     .game-container {
         width: 50%;
+    }
+
+    .player {
+        font-size: 2rem;
     }
 
     .word {
@@ -226,8 +310,46 @@ a {
         padding-top: 1px;
     }
 
-    .player {
-        font-size: 2rem;
+    .keyboard {
+        margin-top: 30px;
+        visibility: visible;
+        bottom: 5%;
+    }
+
+    .key {
+        width: 40px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .pop-up-container {
+        align-items: center;
+    }
+
+    .pop-up {
+        width: 75%;
+        height: 40%;
+        margin-top: 0;
+    }
+
+    .pop-up>h2 {
+        font-size: 3rem;
+    }
+
+    .pop-up>p {
+        font-size: 1.5rem;
+    }
+
+    .pop-up-buttons {
+        flex-direction: row;
+        gap: 50px;
+    }
+
+    .pop-up-buttons button {
+        width: 170px;
+        height: 45px;
+        border-radius: 20px;
+        font-size: 1.2rem;
     }
 }
 
@@ -241,6 +363,11 @@ a {
         width: 35px;
         height: 35px;
         border-radius: 12px;
+    }
+
+    .pop-up {
+        width: 65%;
+        height: 50%;
     }
 }
 
@@ -259,16 +386,34 @@ a {
         height: 50px;
         border-radius: 15px;
     }
+
+    .pop-up {
+        width: 50%;
+        height: 50%;
+    }
+
+    .pop-up>h2 {
+        font-size: 4rem;
+    }
+
+    .pop-up>p {
+        font-size: 1.7rem;
+    }
 }
 
-@media (min-width: 1270px) {
+@media (min-width: 1440px) {
     .word {
         height: 70px;
     }
 
     .letter {
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
         font-size: 2rem;
+    }
+
+    .pop-up {
+        width: 40%;
+        height: 50%;
     }
 }
