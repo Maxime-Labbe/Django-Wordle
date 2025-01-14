@@ -125,6 +125,21 @@ a {
     background-color: var(--red-color);
 }
 
+.wrong-word {
+    position: relative;
+    opacity: 0;
+    margin-top: 25px;
+    text-align: center;
+}
+
+.wrong-word>h3 {
+    color: var(--red-color);
+    font-size: 1.2rem;
+    font-weight: bolder;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .keyboard {
     width: 100%;
     position: absolute;
@@ -243,6 +258,7 @@ a {
     font-size: 1.2rem;
     margin-top: 10px;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .pop-up-buttons {
@@ -292,7 +308,7 @@ a {
     }
 
     .game-container {
-        width: 50%;
+        width: 35%;
     }
 
     .player {
@@ -301,6 +317,7 @@ a {
 
     .word {
         height: 60px;
+        margin: 0;
     }
 
     .letter {
@@ -310,6 +327,10 @@ a {
         padding-top: 1px;
     }
 
+    .wrong-word>h3 {
+        font-size: 1.5rem;
+    }
+
     .keyboard {
         margin-top: 30px;
         visibility: visible;
@@ -317,9 +338,9 @@ a {
     }
 
     .key {
-        width: 40px;
-        height: 60px;
-        font-size: 1.5rem;
+        width: 36px;
+        height: 50px;
+        font-size: 1.4rem;
     }
 
     .pop-up-container {
@@ -372,19 +393,24 @@ a {
 }
 
 @media (min-width: 1024px) {
+    .game-container {
+        width: 50%;
+    }
+
     .game-title {
         font-size: 3rem;
     }
 
-    .game-container {
-        width: 90%;
+    .letter {
+        font-size: 1.7rem;
+        width: 45px;
+        height: 45px;
+        border-radius: 15px;
     }
 
-    .letter {
-        font-size: 2rem;
-        width: 50px;
-        height: 50px;
-        border-radius: 15px;
+    .wrong-word>h3 {
+        margin-top: -20px;
+        font-size: 1.8rem;
     }
 
     .pop-up {
@@ -402,8 +428,22 @@ a {
 }
 
 @media (min-width: 1440px) {
+    .game-container {
+        width: 40%;
+    }
+
     .word {
         height: 70px;
+    }
+
+    .keyboard {
+        bottom: 40%;
+    }
+
+    .key {
+        width: 40px;
+        height: 60px;
+        font-size: 1.5rem;
     }
 
     .letter {

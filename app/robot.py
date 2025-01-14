@@ -43,10 +43,15 @@ def search_for_x_letter_per_word(words):
     while True:
         success = True
         attempt = attempts_words[attempts]
+        unique_letters = []
         for letter in attempt:
+            if letter not in unique_letters:
+                unique_letters.append(letter)
             if attempt.count(letter) > number_of_letters:
                 success = False
                 break
+        if len(unique_letters) <= len(attempt) // 2:
+            success = False
         if success:
             good_guesses.append(attempt)
         attempts+=1
@@ -61,7 +66,7 @@ def search_for_x_letter_per_word(words):
 
 def calculate_letter_frequencies(words,alphabet,word_len):
     letter_count = len(words) * word_len
-    alphabet_frequencies = [0.0]*26
+    alphabet_frequencies = [0.0]*len(alphabet)
     for letter in range(len(alphabet)):
         for word in words:
             alphabet_frequencies[letter] += word.count(alphabet[letter])
@@ -153,21 +158,57 @@ def search_word_more_left_letters(words,alphabet,not_placed,letters):
     for word in words:
         count = 0
         count_letters = []
+        word_letters = []
         index = 0
         for letter in word:
+            if letter not in word_letters:
+                word_letters.append(letter)
             if not letter in alphabet or letters.count(letter) <= word.count(letter):
                 count = -len(word)
             if letter not in count_letters and (letter not in not_placed.keys() or (letter in not_placed.keys() and index not in not_placed[letter])) and letters[index] != letter:
                 count += 1
                 count_letters.append(letter)
             index += 1
-        if count >= max_letters:
+        if count >= max_letters and len(word_letters) > len(word) // 2:
             max_letters = count
             guesses.append(word)
     if guesses == [] or max_letters < (len(guesses[0]) // 2) :
         return words
     return guesses
-                
+
+def add_most_frequent_letter(words,alphabet,alphabet_frequencies,letters,not_placed):
+    frequencies = [f for f in alphabet_frequencies]
+    new_alphabet = [l for l in alphabet]
+    new_letters = [l for l in letters]
+    letters_index = [i for i in range(len(letters)) if letters[i] == ''][0]
+    max_consonant = 0
+    consonant = ''
+    max_vowel = 0
+    vowel = ''
+    while new_letters[letters_index] == '' and len(frequencies) != 0:
+        frequency = max(frequencies)
+        index = frequencies.index(frequency)
+        if (new_alphabet[index] in not_placed.keys() and letters_index not in not_placed[new_alphabet[index]]) or new_alphabet[index] not in not_placed.keys():
+            if new_alphabet[index] not in 'aeiouy' and frequency > max_consonant:
+                consonant = new_alphabet[index]
+                max_consonant = frequency
+            elif new_alphabet[index] in 'aeiouy' and frequency > max_vowel:
+                vowel = new_alphabet[index]
+                max_vowel = frequency
+            if new_alphabet[index] not in letters:
+                new_letters[letters_index] = new_alphabet[index]
+                if ''.join(new_letters) in words:
+                    break
+                else:
+                    new_letters[letters_index] = ''
+        frequencies.remove(frequency)
+        new_alphabet.remove(new_alphabet[index])
+    if new_letters[letters_index] == '':
+        if consonant != '':
+            new_letters[letters_index] = consonant
+        else:
+            new_letters[letters_index] = vowel
+    return "".join(new_letters)       
 
 def update_alphabet(alphabet,alphabet_frequencies,words):
     for letter in alphabet:
@@ -240,9 +281,12 @@ def play_game():
 
     for i in range(ord('a'),ord('z')+1):
         alphabet.append(chr(i))
-    alphabet_frequencies = [0.0]*26
+    alphabet_left = [letter for letter in alphabet]
+    alphabet_frequencies = calculate_letter_frequencies(words,alphabet,random_len)
+    alphabet_frequencies_left = [f for f in alphabet_frequencies]
     guess = ''
     all_guess = []
+    bug_index = []
 
     while guess != word_to_guess and len(all_guess) < 6:
         if guess in words_left:
@@ -254,10 +298,10 @@ def play_game():
             if result[i] == '0':
                 break
             elif result[i] == '1':
-                if guess[i] in alphabet:
-                    index = alphabet.index(guess[i])
-                    alphabet.remove(guess[i])
-                    alphabet_frequencies.remove(alphabet_frequencies[index])
+                if guess[i] in alphabet_left:
+                    index = alphabet_left.index(guess[i])
+                    alphabet_left.remove(guess[i])
+                    alphabet_frequencies_left.remove(alphabet_frequencies_left[index])
             elif result[i] == '2':
                 if guess[i] not in not_placed.keys():
                     not_placed[guess[i]] = []
@@ -269,36 +313,45 @@ def play_game():
             new_letters = place_in_letters(not_placed,letters,word_to_guess)
             letters = [letter for letter in new_letters]
         banned_letters += guess
-        words_left = filter(words_left,letters,not_placed,alphabet)
-        alphabet, alphabet_frequencies= update_alphabet(alphabet,alphabet_frequencies,words_left)
-        alphabet_frequencies = calculate_letter_frequencies(words_left,alphabet,random_len)
-        # if len(words) > 5 and ((26 - len(banned_letters)) >= random_len) and enough_available_letters(alphabet,alphabet_frequencies,random_len,banned_letters):
-        #     guess = most_frequent_positions(most_frequent_letters(alphabet,alphabet_frequencies,random_len,banned_letters),words,random_len)
-        if letters.count('') == 1 and len(words_left) >= 3 and len(all_guess) < 5 :
+        words_left = filter(words_left,letters,not_placed,alphabet_left)
+        alphabet_left, alphabet_frequencies_left = update_alphabet(alphabet_left,alphabet_frequencies_left,words_left)
+        alphabet_frequencies_left = calculate_letter_frequencies(words_left,alphabet_left,random_len)
+        # if len(words) > 5 and ((26 - len(banned_letters)) >= random_len) and enough_available_letters(alphabet_left,alphabet_frequencies_left,random_len,banned_letters):
+        #     guess = most_frequent_positions(most_frequent_letters(alphabet_left,alphabet_frequencies_left,random_len,banned_letters),words,random_len)
+        # print(letters.count(''),len(words_left),len(all_guess))
+        if len(words_left) == 1:
+            guess = words_left[0]
+            bug_index.append('Last word')
+        elif letters.count('') == 1 and len(words_left) >= 3 and len(all_guess) < 5 :
             guess = search_word_most_unique_validated_letters(words,words_left,letters)
             if len(guess) > 1:
-                guess = random.choice(guess)
+                guess = search_word_most_frequent_letters(guess,alphabet_frequencies,alphabet)
             else:
                 guess = guess[0]
+            bug_index.append('1 lettre and +1 guess LEFT')
+        elif letters.count('') == 1:
+            guess = add_most_frequent_letter(words_left,alphabet_left,alphabet_frequencies_left,letters,not_placed)
+            bug_index.append('1 lettre LEFT')
         elif len(words_left) > 10 and letters.count('') >= (len(letters) // 2) and len(all_guess) >= 1:
-            guess = search_word_more_left_letters(words,alphabet,not_placed,letters)
+            guess = search_word_more_left_letters(words,alphabet_left,not_placed,letters)
             if guess == words:
-                guess = search_word_most_frequent_letters(search_for_x_letter_per_word(words_left),alphabet_frequencies,alphabet)
+                guess = search_word_most_frequent_letters(search_for_x_letter_per_word(words_left),alphabet_frequencies_left,alphabet_left)
             elif len(guess) > 1:
-                guess = random.choice(guess)
+                guess = search_word_most_frequent_letters(search_for_x_letter_per_word(guess),alphabet_frequencies,alphabet)
             else:
                 guess = guess[0]
-        elif len(words_left) > 50:
-            guess = search_word_most_frequent_letters(search_for_x_letter_per_word(words_left),alphabet_frequencies,alphabet)
+            bug_index.append('More than half letters LEFT')
+        elif len(words_left) > 10:
+            guess = search_word_most_frequent_letters(search_for_x_letter_per_word(words_left),alphabet_frequencies_left,alphabet_left)
+            bug_index.append('More than 50 words SEARCH')
         elif len(words_left) > 1:
-            guess = search_word_most_frequent_letters(words_left,alphabet_frequencies,alphabet)
-        else:
-            guess = words_left[0]
+            guess = search_word_most_frequent_letters(words_left,alphabet_frequencies_left,alphabet_left)
+            bug_index.append('Less than 50 words SEARCH')
         # if len(all_guess) > 0 and  guess == all_guess[-1]:
-            # print(word_to_guess,guess,all_guess,alphabet,alphabet_frequencies,words_left,letters,not_placed)
+            # print(word_to_guess,guess,all_guess,alphabet_left,alphabet_frequencies_left,words_left,letters,not_placed)
         all_guess.append(guess)
 
-    data = {'len_word_to_guess': len(word_to_guess), 'word_to_guess': word_to_guess, 'all_guesses': all_guess}
+    data = {'len_word_to_guess': len(word_to_guess), 'word_to_guess': word_to_guess, 'all_guesses': all_guess, 'bug_index': bug_index}
     return data
 
 def set_data(data_to_assign):
