@@ -2,9 +2,6 @@ async function script() {
     async function fetchData() {
         try {
             const response = await fetch(API_ENDPOINT, {
-                headers: {
-                    'X-SECRET-TOKEN': 'dzabvyu546456DJSQD6DAZ6TDQU6fa'
-                }
             });
             const data = await response.json();
             return data.data;
