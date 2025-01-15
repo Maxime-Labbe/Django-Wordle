@@ -68,7 +68,7 @@ This project is a Wordle game where you can play against a robot and on your own
 - `/api/get_data_solo`: Fetches data for the solo game.
 
 ## Project Structure
-
+```bash
 Django-Wordle/
 ├── api/
 │   ├── __init__.py
@@ -132,3 +132,4 @@ Django-Wordle/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
