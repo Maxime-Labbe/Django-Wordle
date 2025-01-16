@@ -4,9 +4,6 @@ from django.conf import settings
 from app import robot
 
 def get_data_robot(request):
-    secret_token = request.headers.get('X-SECRET-TOKEN')
-    if secret_token != settings.SECRET_API_TOKEN:
-        return JsonResponse({'error': 'Unauthorized access'}, status=401)
     referer = request.META.get('HTTP_REFERER')
     if not referer or not ('robot' in referer):
         return JsonResponse({'error': 'Unauthorized access'})

@@ -33,3 +33,10 @@
     align-items: flex-start;
     margin-top: 20px;
 }
+
+
+@media (min-width: 640px) {
+    .keyboard.solo-keyboard {
+        bottom: 5%;
+    }
+}

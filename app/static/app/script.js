@@ -127,10 +127,10 @@ async function script() {
         popUp.style.visibility = 'visible';
         if (state === true) {
             popUp.querySelector('.pop-up>h2').textContent = 'Bravo !';
-            popUp.querySelector('.pop-up>p').textContent = 'Vous avez battu le robot !';
+            popUp.querySelector('.pop-up>p').textContent = type_of_game === 'robot' ? 'Vous avez battu le robot !' : 'Vous avez gagné !';
         } else if (state === false) {
             popUp.querySelector('.pop-up>h2').textContent = 'Dommage !';
-            popUp.querySelector('.pop-up>p').textContent = 'Vous avez perdu contre le robot !';
+            popUp.querySelector('.pop-up>p').textContent = type_of_game === 'robot' ? 'Vous avez perdu contre le robot !' : 'Vous avez perdu !';
         } else {
             popUp.querySelector('.pop-up>h2').textContent = 'Égalité !';
             popUp.querySelector('.pop-up>p').textContent = 'Vous n\'avez rien de spécial...';
@@ -190,9 +190,9 @@ async function script() {
                         }
                         if (word === word_data.word_to_guess) {
                             end = true;
-                            if (current_word < word_data.all_guesses.length - 1) {
+                            if ((word_data.all_guesses && current_word < word_data.all_guesses.length - 1) || (!word_data.all_guesses)) {
                                 displayPopUp(true);
-                            } else if (current_word === word_data.all_guesses.length - 1) {
+                            } else if (word_data.all_guesses && current_word === word_data.all_guesses.length - 1) {
                                 displayPopUp('draw');
                             } else {
                                 displayPopUp(false);
@@ -203,6 +203,8 @@ async function script() {
                                     for (let i = 1; i < word_data.all_guesses.length - current_word; i++) {
                                         addRobotWord(word_data.all_guesses, words, current_word + i, word_data.len_word_to_guess);
                                     }
+                                } else {
+                                    addRobotWord(word_data.all_guesses, words, word_data.all_guesses.length - 1, word_data.len_word_to_guess);
                                 }
                             }
                         } else if (current_word == 5) {
